@@ -31,15 +31,14 @@ void Registrar::sim(){
     totalWindow = stoi(line); //convert input to int
     window = new Windows[totalWindow];
     for (int i = 0; i < totalWindow; i++){
-        Windows numWindows;
-        window[i] = numWindows;
+        Windows m_Window;
+        window[i] = m_Window;
     }
     //get time the student(s) arrive
     while (getline(inFile, line)) {
         if (stoi(line) != currentTime){
             int gapTime = stoi(line) - currentTime;
             currentTime = stoi(line);
-
             //Add time gaps to window idle time 
             windowUpdateIdle(gapTime);
         }
@@ -165,29 +164,16 @@ void Registrar::getStats(){
         }
     }
 
-    int studentWaitedArr[studentNum - didNotWait];
-    int indexNum = 0;
-    for (int i = 0; i < studentNum; i++){
-      if (studWaitArr[i] != 0){
-        studentWaitedArr[indexNum] = studWaitArr[i];
-        indexNum += 1;
-      }
-    }
-    // student median and mean
-    if (studentNum - didNotWait != 0){
-      studMean = (double)studWaitSum / (double)studentNum;
-      if ((studentNum - didNotWait) % 2 == 0){
-          studWaitArrPos = (studentNum - didNotWait) / 2 - 1;
-          studWaitMed = (double)(studentWaitedArr[studWaitArrPos] + studentWaitedArr[studWaitArrPos]) / (double)2;
-      }
-      else{
+    // student mean
+    studMean = (double)studWaitSum / (double)studentNum;
+
+    //student median
+    if (studentNum % 2 == 0){
+          studWaitArrPos = (studentNum / 2) - 1;
+          studWaitMed = (double)(studWaitArr[studWaitArrPos] + studWaitArr[studWaitArrPos + 1]) / (double)2;
+     } else{
           studWaitArrPos = (studentNum - didNotWait + 1) / 2 -1;
-          studWaitMed = studentWaitedArr[studWaitArrPos];
-      }
-    }
-    else{
-      studMean = 0;
-      studWaitMed = 0;
+          studWaitMed = studWaitArr[studWaitArrPos];
     }
 
     //calculating window idle data
